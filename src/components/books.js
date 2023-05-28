@@ -1,27 +1,42 @@
-import Book from "./book";
+import React, { useEffect, useState } from 'react';
 import Row from 'react-bootstrap/Row';
+import Image from 'react-bootstrap/Image';
 import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import { FormattedMessage } from 'react-intl';
 
-const { useEffect, useState } = require("react"); // Hook de estado y de efecto
+function Books() {
+  const [books, setBooks] = useState([]);
 
-function Books () {
+  useEffect(() => {
+    const URL = " /books";
+    fetch(URL)
+      .then(response => response.json())
+      .then(data => {
+        setBooks(data);
+      });
+  }, []);
 
-   const [books, setBooks] = useState([]); 
-   useEffect(()=>{
-       const URL = "https://parcial2-be-ec3d.vercel.app/books";
-       fetch(URL).then(data => data.json()).then(data => {
-           setBooks(data);
-       })
-   }, []);
-   return(
-        <div className="container">
-            <h2 className="mt-2">Listado de Books</h2>
-            <hr></hr>
-            <Row>
-            {books.map((book) => (<Col key={book.id}><Book book={book} /></Col>))}
-            </Row>
-        </div>
-   )
+  return (
+    <div className="container"  style={{ margin: '300px', marginTop:'55px'}}>
+      <h1 className="mt-2"><FormattedMessage id="Listado de libros"/></h1>
+        <hr/>
+        <Row>
+            {books.map(book => (
+            <Col key={book.id} md={4}>
+                <div>
+                <h3>{book.name}</h3>
+                <Button variant="secundary" href={`/books/${book.id}`}>
+                    <Image src={book.image} />
+                </Button>
+                <p>ISBN: {book.isbn}</p>
+                </div>
+            </Col>
+            ))}
+        </Row>
+    </div>
+  );
 }
 
 export default Books;
+

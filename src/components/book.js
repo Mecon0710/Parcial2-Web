@@ -1,43 +1,70 @@
-import Card from "react-bootstrap/Card";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import Image from 'react-bootstrap/Image';
+import { FormattedMessage } from 'react-intl';
 
-function Book(props) {
- return (
-   <Card style={{ width: "18rem", height: "24rem" }} className="mb-3">
-     <Card.Body>
-       <Card.Title>
-         <Link to={"/books/" + props.book.id}> {/* Navegara al enlace de la ruta + el id del libro */}
-           {props.book.name}
-         </Link>
-       </Card.Title>
-       <Card.Text> 
-            <Link to={"https://parcial2-be-ec3d.vercel.app/ "+ props.book.id}> 
-                {props.book.id}
-                <hr></hr>
-                {props.book.name}
-                <hr></hr>
-                {props.book.image}
-                <hr></hr>
-                {props.book.isbn}
-                <hr></hr>
-                {props.book.author}
-                <hr></hr>
-                {props.book.gender}
-                <hr></hr>
-                {props.book.publisher}
-                <hr></hr>
-                {props.book.year}
-                <hr></hr>
-                {props.book.available_online}
-                <hr></hr>
-                {props.book.price}
-                <hr></hr>
-                {props.book.summary}
-            </Link>
-        </Card.Text>
-     </Card.Body>
-   </Card>
- );
+function Book() {
+
+  const [currentURL, setCurrentURL] = useState('');
+
+  useEffect(() => {
+    setCurrentURL(window.location.pathname);
+  }, []);
+
+  const [book, setBook] = useState([]);
+  
+  useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        const URL = currentURL;
+        const response = await fetch(URL);
+        if (response.ok) {
+          const data = await response.json();
+          setBook(data);
+        } else {
+          console.error('Error al obtener los detalles del libro');
+        }
+      } catch (error) {
+        console.error('Error al realizar la solicitud:', error);
+      }
+    };
+
+    fetchBook();
+  }, [currentURL]);
+
+  return (
+    <div className="book-details-container"  style={{ textAlign: 'left', margin: '50px'}} >
+      <h2>{book.name}</h2>
+      <div className="book-details">
+        <div className="book-image">
+          <Image src={book.image}/>
+        </div>
+        <div className="book-info">
+          <p>
+            <strong>ISBN:</strong> {book.isbn}
+          </p>
+          <p>
+            <strong><FormattedMessage id="Autor"/>:</strong> {book.author}
+          </p>
+          <p>
+            <strong><FormattedMessage id="Editorial"/>:</strong> {book.publisher}
+          </p>
+          <p>
+            <strong><FormattedMessage id="Género"/>:</strong> {book.gender}
+          </p>
+          <p>
+            <strong><FormattedMessage id="Año"/>:</strong> {book.year}
+          </p>
+          <p>
+            <strong><FormattedMessage id="Precio"/>:</strong> {book.price}
+          </p>
+          <p>
+            <strong><FormattedMessage id="Resumen"/>:</strong> {book.summary}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
+
 
 export default Book;
