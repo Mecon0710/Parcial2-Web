@@ -17,10 +17,6 @@ function Login() {
     };
   
     const handleLogin = () => {
-        // Realizar una solicitud HTTP al servidor para autenticar al usuario
-        // Puedes usar la función fetch o una librería como axios para hacer la solicitud
-      
-        // Ejemplo usando fetch
         fetch('/login', {
           method: 'POST',
           headers: {
@@ -36,7 +32,6 @@ function Login() {
             }
           })
           .catch(error => {
-            // Manejar el error de la solicitud, por ejemplo, mostrar un mensaje de error
             console.error('Error al realizar la solicitud:', error);
           });
       };
